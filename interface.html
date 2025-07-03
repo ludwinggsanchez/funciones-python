@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 500px; margin: auto; }
+        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input[type="file"] { margin-bottom: 10px; }
+        button { padding: 8px 16px; border: none; background: #007bff; color: #fff; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f8f8; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload and Process CSV/XLSX Files</h2>
+        <div class="section">
+            <form id="uploadCsvForm">
+                <label for="csvFile">Upload CSV</label>
+                <input type="file" id="csvFile" name="file" accept=".csv" required>
+                <button type="submit">Upload CSV</button>
+            </form>
+            <pre id="csvResult"></pre>
+        </div>
+        <div class="section">
+            <form id="uploadXlsxForm">
+                <label for="xlsxFile">Upload XLSX</label>
+                <input type="file" id="xlsxFile" name="file" accept=".xlsx" required>
+                <button type="submit">Upload XLSX</button>
+            </form>
+            <pre id="xlsxResult"></pre>
+        </div>
+        <div class="section">
+            <form id="csvSummaryForm">
+                <label for="csvSummaryFile">CSV Summary</label>
+                <input type="file" id="csvSummaryFile" name="file" accept=".csv" required>
+                <button type="submit">Get CSV Summary</button>
+            </form>
+            <pre id="csvSummaryResult"></pre>
+        </div>
+        <div class="section">
+            <form id="xlsxSummaryForm">
+                <label for="xlsxSummaryFile">XLSX Summary</label>
+                <input type="file" id="xlsxSummaryFile" name="file" accept=".xlsx" required>
+                <button type="submit">Get XLSX Summary</button>
+            </form>
+            <pre id="xlsxSummaryResult"></pre>
+        </div>
+        <div class="section">
+            <form id="convertForm">
+                <label for="convertCsvFile">Convert CSV to XLSX</label>
+                <input type="file" id="convertCsvFile" name="file" accept=".csv" required>
+                <button type="submit">Convert & Download XLSX</button>
+            </form>
+            <pre id="convertResult"></pre>
+        </div>
+    </div>
+    <script>
+        function handleForm(formId, endpoint, resultId, isDownload) {
+            document.getElementById(formId).addEventListener('submit', function(e) {
+                e.preventDefault();
+                const form = e.target;
+                const fileInput = form.querySelector('input[type="file"]');
+                const file = fileInput.files[0];
+                if (!file) return;
+                const formData = new FormData();
+                formData.append('file', file);
+                fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(async response => {
+                    if (isDownload && response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'converted.xlsx';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        document.getElementById(resultId).textContent = 'Download started.';
+                    } else {
+                        const data = await response.json();
+                        document.getElementById(resultId).textContent = JSON.stringify(data, null, 2);
+                    }
+                })
+                .catch(err => {
+                    document.getElementById(resultId).textContent = 'Error: ' + err;
+                });
+            });
+        }
+        handleForm('uploadCsvForm', '/upload/csv', 'csvResult');
+        handleForm('uploadXlsxForm', '/upload/xlsx', 'xlsxResult');
+        handleForm('csvSummaryForm', '/csv/summary', 'csvSummaryResult');
+        handleForm('xlsxSummaryForm', '/xlsx/summary', 'xlsxSummaryResult');
+        handleForm('convertForm', '/convert/csv-to-xlsx', 'convertResult', true);
+    </script>
+</body>
+</html>
