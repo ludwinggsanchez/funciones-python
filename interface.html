@@ -3,15 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>File Upload & Clima</title>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <title>File Upload Interface</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         margin: 40px;
       }
       .container {
-        max-width: 600px;
+        max-width: 500px;
         margin: auto;
       }
       .section {
@@ -75,7 +74,6 @@
   <body>
     <div class="container">
       <h2>Upload and Process CSV/XLSX Files</h2>
-
       <div class="section">
         <form id="uploadCsvForm">
           <label for="csvFile">Upload CSV</label>
@@ -84,7 +82,6 @@
         </form>
         <pre id="csvResult"></pre>
       </div>
-
       <div class="section">
         <form id="uploadXlsxForm">
           <label for="xlsxFile">Upload XLSX</label>
@@ -99,7 +96,6 @@
         </form>
         <pre id="xlsxResult"></pre>
       </div>
-
       <div class="section">
         <form id="csvSummaryForm">
           <label for="csvSummaryFile">CSV Summary</label>
@@ -114,7 +110,6 @@
         </form>
         <pre id="csvSummaryResult"></pre>
       </div>
-
       <div class="section">
         <form id="xlsxSummaryForm">
           <label for="xlsxSummaryFile">XLSX Summary</label>
@@ -129,7 +124,6 @@
         </form>
         <pre id="xlsxSummaryResult"></pre>
       </div>
-
       <div class="section">
         <form id="convertForm">
           <label for="convertCsvFile">Convert CSV to XLSX</label>
@@ -144,7 +138,48 @@
         </form>
         <pre id="convertResult"></pre>
       </div>
-
+      <div class="section">
+        <form id="genericOneForm">
+          <label>Generic Function One</label>
+          <button type="submit">Call Generic One</button>
+        </form>
+        <pre id="genericOneResult"></pre>
+      </div>
+      <div class="section">
+        <form id="genericTwoForm">
+          <label>Generic Function Two</label>
+          <button type="submit">Call Generic Two</button>
+        </form>
+        <pre id="genericTwoResult"></pre>
+      </div>
+      <div class="section">
+        <form id="functionOneForm">
+          <label>Function One</label>
+          <button type="submit">Call Function One</button>
+        </form>
+        <pre id="functionOneResult"></pre>
+      </div>
+      <div class="section">
+        <form id="functionTwoForm">
+          <label>Function Two</label>
+          <button type="submit">Call Function Two</button>
+        </form>
+        <pre id="functionTwoResult"></pre>
+      </div>
+      <div class="section">
+        <form id="functionThreeForm">
+          <label>Function Three</label>
+          <button type="submit">Call Function Three</button>
+        </form>
+        <pre id="functionThreeResult"></pre>
+      </div>
+      <div class="section">
+        <form id="functionFourForm">
+          <label>Function Four</label>
+          <button type="submit">Call Function Four</button>
+        </form>
+        <pre id="functionFourResult"></pre>
+      </div>
       <div class="section">
         <h2>🌦️ Clima por hora</h2>
         <div class="sectionSearch">
@@ -180,22 +215,22 @@
       </div>
     </div>
     <script>
-      // 🔧 Funciones para subir archivos (simulados con endpoints locales)
-      function handleForm(formId, endpoint, resultId, isDownload) {
+      function handleForm(formId, endpoint, resultId, isDownload, isFile) {
         document
           .getElementById(formId)
           .addEventListener("submit", function (e) {
             e.preventDefault();
             const form = e.target;
-            const fileInput = form.querySelector('input[type="file"]');
-            const file = fileInput.files[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append("file", file);
-            fetch(endpoint, {
-              method: "POST",
-              body: formData,
-            })
+            let fetchOptions = { method: "POST" };
+            if (isFile) {
+              const fileInput = form.querySelector('input[type="file"]');
+              const file = fileInput.files[0];
+              if (!file) return;
+              const formData = new FormData();
+              formData.append("file", file);
+              fetchOptions.body = formData;
+            }
+            fetch(endpoint, fetchOptions)
               .then(async (response) => {
                 if (isDownload && response.ok) {
                   const blob = await response.blob();
@@ -219,15 +254,71 @@
               });
           });
       }
-
-      handleForm("uploadCsvForm", "/upload/csv", "csvResult");
-      handleForm("uploadXlsxForm", "/upload/xlsx", "xlsxResult");
-      handleForm("csvSummaryForm", "/csv/summary", "csvSummaryResult");
-      handleForm("xlsxSummaryForm", "/xlsx/summary", "xlsxSummaryResult");
-      handleForm("convertForm", "/convert/csv-to-xlsx", "convertResult", true);
-    </script>
-
-    <script>
+      handleForm("uploadCsvForm", "/upload/csv", "csvResult", false, true);
+      handleForm("uploadXlsxForm", "/upload/xlsx", "xlsxResult", false, true);
+      handleForm(
+        "csvSummaryForm",
+        "/csv/summary",
+        "csvSummaryResult",
+        false,
+        true
+      );
+      handleForm(
+        "xlsxSummaryForm",
+        "/xlsx/summary",
+        "xlsxSummaryResult",
+        false,
+        true
+      );
+      handleForm(
+        "convertForm",
+        "/convert/csv-to-xlsx",
+        "convertResult",
+        true,
+        true
+      );
+      handleForm(
+        "genericOneForm",
+        "/generic/one",
+        "genericOneResult",
+        false,
+        false
+      );
+      handleForm(
+        "genericTwoForm",
+        "/generic/two",
+        "genericTwoResult",
+        true,
+        false
+      );
+      handleForm(
+        "functionOneForm",
+        "/function/one",
+        "functionOneResult",
+        false,
+        false
+      );
+      handleForm(
+        "functionTwoForm",
+        "/function/two",
+        "functionTwoResult",
+        false,
+        false
+      );
+      handleForm(
+        "functionThreeForm",
+        "/function/three",
+        "functionThreeResult",
+        false,
+        false
+      );
+      handleForm(
+        "functionFourForm",
+        "/function/four",
+        "functionFourResult",
+        false,
+        false
+      );
       // 🔑 API Key
       const API_KEY = "0426072de4bb9581d25e364b159fc57c";
 
