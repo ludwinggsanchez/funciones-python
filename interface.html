@@ -1,161 +1,338 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload Interface</title>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interfaz de Carga y Clima</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .container { max-width: 500px; margin: auto; }
-        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; }
-        input[type="file"] { margin-bottom: 10px; }
-        button { padding: 8px 16px; border: none; background: #007bff; color: #fff; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        pre {
-            background: #f8f8f8;
-            padding: 10px;
-            border-radius: 4px;
-            white-space: pre-wrap; /* allow line breaks */
-            word-break: break-word; /* break long words */
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+      input[type="file"] {
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 8px 16px;
+        border: none;
+        background: #007bff;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      pre {
+        background: #f8f8f8;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      .clima-item {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 0;
+      }
+      .clima-item img {
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+      }
+      .select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .buttonDownload {
+        margin-top: 1rem;
+      }
+      .sectionSearch {
+        display: flex;
+        gap: 1rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div style="display:none;">
-        <h2>Upload and Process CSV/XLSX Files</h2>
-        <div class="section">
-            <form id="uploadCsvForm">
-                <label for="csvFile">Upload CSV</label>
-                <input type="file" id="csvFile" name="file" accept=".csv" required>
-                <button type="submit">Upload CSV</button>
-            </form>
-            <pre id="csvResult"></pre>
+      <h2>Upload and Process CSV/XLSX Files</h2>
+
+      <!-- Formularios de carga y procesamiento -->
+      <div class="section">
+        <form id="uploadCsvForm">
+          <label for="csvFile">Upload CSV</label>
+          <input type="file" id="csvFile" name="file" accept=".csv" required />
+          <button type="submit">Upload CSV</button>
+        </form>
+        <pre id="csvResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="uploadXlsxForm">
+          <label for="xlsxFile">Upload XLSX</label>
+          <input type="file" id="xlsxFile" name="file" accept=".xlsx" required />
+          <button type="submit">Upload XLSX</button>
+        </form>
+        <pre id="xlsxResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="csvSummaryForm">
+          <label for="csvSummaryFile">CSV Summary</label>
+          <input type="file" id="csvSummaryFile" name="file" accept=".csv" required />
+          <button type="submit">Get CSV Summary</button>
+        </form>
+        <pre id="csvSummaryResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="xlsxSummaryForm">
+          <label for="xlsxSummaryFile">XLSX Summary</label>
+          <input type="file" id="xlsxSummaryFile" name="file" accept=".xlsx" required />
+          <button type="submit">Get XLSX Summary</button>
+        </form>
+        <pre id="xlsxSummaryResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="convertForm">
+          <label for="convertCsvFile">Convert CSV to XLSX</label>
+          <input type="file" id="convertCsvFile" name="file" accept=".csv" required />
+          <button type="submit">Convert & Download XLSX</button>
+        </form>
+        <pre id="convertResult"></pre>
+      </div>
+
+      <!-- Funciones genéricas -->
+      <div class="section">
+        <form id="genericOneForm">
+          <label>Tasa de mortalidad</label>
+          <button type="submit">Obtener cifras de tasa de mortalidad</button>
+        </form>
+        <pre id="genericOneResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="genericTwoForm">
+          <label>Tasa de hurtos</label>
+          <button type="submit">Obtener cifras de tasas de hurtos</button>
+        </form>
+        <pre id="genericTwoResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="functionOneForm">
+          <label>Function One</label>
+          <button type="submit">Call Function One</button>
+        </form>
+        <pre id="functionOneResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="functionTwoForm">
+          <label>Function Two</label>
+          <button type="submit">Call Function Two</button>
+        </form>
+        <pre id="functionTwoResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="functionThreeForm">
+          <label>Tasa de préstamos</label>
+          <button type="submit">Analizar archivo loan_data.csv</button>
+        </form>
+        <pre id="functionThreeResult"></pre>
+      </div>
+
+      <div class="section">
+        <form id="functionFourForm">
+          <label>Traducciones</label>
+          <button type="submit">Obtener traducción aleatoria</button>
+        </form>
+        <pre id="functionFourResult"></pre>
+      </div>
+
+      <!-- Clima -->
+      <div class="section">
+        <h2>🌦️ Clima por hora</h2>
+        <div class="sectionSearch">
+          <select class="select" id="ciudadInput">
+            <option value="Bogotá">Bogotá</option>
+            <option value="Medellín">Medellín</option>
+            <option value="Cali">Cali</option>
+            <option value="Barranquilla">Barranquilla</option>
+            <option value="Cartagena">Cartagena</option>
+            <option value="Cúcuta">Cúcuta</option>
+            <option value="Bucaramanga">Bucaramanga</option>
+            <option value="Pereira">Pereira</option>
+            <option value="Manizales">Manizales</option>
+            <option value="Ibagué">Ibagué</option>
+            <option value="Santa Marta">Santa Marta</option>
+            <option value="Villavicencio">Villavicencio</option>
+            <option value="Neiva">Neiva</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Pasto">Pasto</option>
+            <option value="Montería">Montería</option>
+            <option value="Sincelejo">Sincelejo</option>
+            <option value="Valledupar">Valledupar</option>
+            <option value="Popayán">Popayán</option>
+            <option value="Tunja">Tunja</option>
+          </select>
+          <button onclick="cargarClima()">Buscar</button>
         </div>
-        <div class="section">
-            <form id="uploadXlsxForm">
-                <label for="xlsxFile">Upload XLSX</label>
-                <input type="file" id="xlsxFile" name="file" accept=".xlsx" required>
-                <button type="submit">Upload XLSX</button>
-            </form>
-            <pre id="xlsxResult"></pre>
-        </div>
-        <div class="section">
-            <form id="csvSummaryForm">
-                <label for="csvSummaryFile">CSV Summary</label>
-                <input type="file" id="csvSummaryFile" name="file" accept=".csv" required>
-                <button type="submit">Get CSV Summary</button>
-            </form>
-            <pre id="csvSummaryResult"></pre>
-        </div>
-        <div class="section">
-            <form id="xlsxSummaryForm">
-                <label for="xlsxSummaryFile">XLSX Summary</label>
-                <input type="file" id="xlsxSummaryFile" name="file" accept=".xlsx" required>
-                <button type="submit">Get XLSX Summary</button>
-            </form>
-            <pre id="xlsxSummaryResult"></pre>
-        </div>
-        <div class="section">
-            <form id="convertForm">
-                <label for="convertCsvFile">Convert CSV to XLSX</label>
-                <input type="file" id="convertCsvFile" name="file" accept=".csv" required>
-                <button type="submit">Convert & Download XLSX</button>
-            </form>
-            <pre id="convertResult"></pre>
-        </div>
-        </div>
-        <div class="section">
-            <form id="genericOneForm">
-                <label>Tasa de mortalidad</label>
-                <button type="submit">Obtener cifras de tasa de mortalidad</button>
-            </form>
-            <pre id="genericOneResult"></pre>
-        </div>
-        <div class="section">
-            <form id="genericTwoForm">
-                <label>Tasa de hurtos</label>
-                <button type="submit">Obtener cifras de tasas de hurtos</button>
-            </form>
-            <pre id="genericTwoResult"></pre>
-        </div>
-        <div class="section">
-            <form id="functionOneForm">
-                <label>Function One</label>
-                <button type="submit">Call Function One</button>
-            </form>
-            <pre id="functionOneResult"></pre>
-        </div>
-        <div class="section">
-            <form id="functionTwoForm">
-                <label>Function Two</label>
-                <button type="submit">Call Function Two</button>
-            </form>
-            <pre id="functionTwoResult"></pre>
-        </div>
-        <div class="section">
-            <form id="functionThreeForm">
-                <label>Tasa de préstamos</label>
-                <button type="submit">Analizar archivo loan_data.csv</button>
-            </form>
-            <pre id="functionThreeResult"></pre>
-        </div>
-        <div class="section">
-            <form id="functionFourForm">
-                <label>Traducciones</label>
-                <button type="submit">Obtener traducción aleatoria</button>
-            </form>
-            <pre id="functionFourResult"></pre>
-        </div>
+        <div id="climaContainer"></div>
+        <button class="buttonDownload" onclick="descargarExcel()">📥 Descargar Excel</button>
+      </div>
     </div>
+
+    <!-- Scripts -->
     <script>
-        function handleForm(formId, endpoint, resultId, isDownload, isFile) {
-            document.getElementById(formId).addEventListener('submit', function(e) {
-                e.preventDefault();
-                const form = e.target;
-                let fetchOptions = { method: 'POST' };
-                if (isFile) {
-                    const fileInput = form.querySelector('input[type="file"]');
-                    const file = fileInput.files[0];
-                    if (!file) return;
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    fetchOptions.body = formData;
-                }
-                fetch(endpoint, fetchOptions)
-                .then(async response => {
-                    if (isDownload && response.ok) {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'converted.xlsx';
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        document.getElementById(resultId).textContent = 'Download started.';
-                    } else {
-                        const data = await response.json();
-                        document.getElementById(resultId).textContent = JSON.stringify(data, null, 2);
-                    }
-                })
-                .catch(err => {
-                    document.getElementById(resultId).textContent = 'Error: ' + err;
-                });
+      function handleForm(formId, endpoint, resultId, isDownload, isFile) {
+        document.getElementById(formId).addEventListener("submit", function (e) {
+          e.preventDefault();
+          const form = e.target;
+          let fetchOptions = { method: "POST" };
+          if (isFile) {
+            const fileInput = form.querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append("file", file);
+            fetchOptions.body = formData;
+          }
+          fetch(endpoint, fetchOptions)
+            .then(async (response) => {
+              if (isDownload && response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "converted.xlsx";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                document.getElementById(resultId).textContent = "Download started.";
+              } else {
+                const data = await response.json();
+                document.getElementById(resultId).textContent = JSON.stringify(data, null, 2);
+              }
+            })
+            .catch((err) => {
+              document.getElementById(resultId).textContent = "Error: " + err;
             });
+        });
+      }
+
+      // Configura formularios
+      handleForm("uploadCsvForm", "/upload/csv", "csvResult", false, true);
+      handleForm("uploadXlsxForm", "/upload/xlsx", "xlsxResult", false, true);
+      handleForm("csvSummaryForm", "/csv/summary", "csvSummaryResult", false, true);
+      handleForm("xlsxSummaryForm", "/xlsx/summary", "xlsxSummaryResult", false, true);
+      handleForm("convertForm", "/convert/csv-to-xlsx", "convertResult", true, true);
+      handleForm("genericOneForm", "/generic/one", "genericOneResult", false, false);
+      handleForm("genericTwoForm", "/generic/two", "genericTwoResult", true, false);
+      handleForm("functionOneForm", "/function/one", "functionOneResult", false, false);
+      handleForm("functionTwoForm", "/function/two", "functionTwoResult", false, false);
+      handleForm("functionThreeForm", "/function/three", "functionThreeResult", false, false);
+      handleForm("functionFourForm", "/function/four", "functionFourResult", false, false);
+
+      const API_KEY = "0426072de4bb9581d25e364b159fc57c";
+
+      async function cargarClima() {
+        const ciudad = document.getElementById("ciudadInput").value;
+        const contenedor = document.getElementById("climaContainer");
+        contenedor.innerHTML = "⏳ Cargando...";
+
+        try {
+          const geoRes = await fetch(
+            `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+              ciudad
+            )}&limit=1&appid=${API_KEY}`
+          );
+          const geoData = await geoRes.json();
+          if (!geoData.length) {
+            contenedor.innerHTML = `<p style="color:red;">❌ Ciudad no encontrada</p>`;
+            return;
+          }
+
+          const { lat, lon } = geoData[0];
+          const climaRes = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`
+          );
+          const climaData = await climaRes.json();
+
+          const datos = climaData.list.slice(0, 6).map((item) => {
+            const fecha = new Date(item.dt * 1000).toLocaleString("es-CO", {
+              weekday: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            return {
+              fecha_hora: fecha,
+              prob_lluvia: Math.round((item.pop || 0) * 100),
+              descripcion: item.weather[0].description,
+              icono: `http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
+            };
+          });
+
+          contenedor.innerHTML = "";
+          datos.forEach((item) => {
+            contenedor.innerHTML += `
+              <div class="clima-item">
+                <img src="${item.icono}" alt="Icono clima" />
+                <div>
+                  <strong>${item.fecha_hora}</strong><br />
+                  🌧️ ${item.prob_lluvia}% prob. de lluvia<br />
+                  📝 ${item.descripcion}
+                </div>
+              </div>
+            `;
+          });
+
+          window.datosClima = datos;
+        } catch (error) {
+          contenedor.innerHTML = `<p style="color:red;">❌ Error cargando datos</p>`;
+          console.error(error);
         }
-        handleForm('uploadCsvForm', '/upload/csv', 'csvResult', false, true);
-        handleForm('uploadXlsxForm', '/upload/xlsx', 'xlsxResult', false, true);
-        handleForm('csvSummaryForm', '/csv/summary', 'csvSummaryResult', false, true);
-        handleForm('xlsxSummaryForm', '/xlsx/summary', 'xlsxSummaryResult', false, true);
-        handleForm('convertForm', '/convert/csv-to-xlsx', 'convertResult', true, true);
-        handleForm('genericOneForm', '/generic/one', 'genericOneResult', false, false);
-        handleForm('genericTwoForm', '/generic/two', 'genericTwoResult', true, false);
-        handleForm('functionOneForm', '/function/one', 'functionOneResult', false, false);
-        handleForm('functionTwoForm', '/function/two', 'functionTwoResult', false, false);
-        handleForm('functionThreeForm', '/function/three', 'functionThreeResult', false, false);
-        handleForm('functionFourForm', '/function/four', 'functionFourResult', false, false);
+      }
+
+      function descargarExcel() {
+        if (!window.datosClima || window.datosClima.length === 0) {
+          alert("Primero consulta el clima.");
+          return;
+        }
+
+        const wsData = [["Fecha y Hora", "Probabilidad de lluvia (%)", "Descripción"]];
+        window.datosClima.forEach((item) => {
+          wsData.push([item.fecha_hora, item.prob_lluvia, item.descripcion]);
+        });
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, "Clima");
+        XLSX.writeFile(wb, `clima_${document.getElementById("ciudadInput").value}.xlsx`);
+      }
+
+      window.onload = cargarClima;
     </script>
-</body>
+  </body>
 </html>
