@@ -10,10 +10,19 @@ warnings.filterwarnings('ignore')
 
 def function_three():
     """
-    Esta función crea una instancia de la clase CalculadoraPrestamos y ejecuta su menú principal.
+    Esta función crea una instancia de la clase CalculadoraPrestamos, ejecuta la opción 2 del menú principal automáticamente y retorna un mensaje JSON.
     """
     calculadora = CalculadoraPrestamos()
-    calculadora.menu_principal()
+    # Patch input to simulate selecting option 2 and then 0 to exit
+    import builtins
+    original_input = builtins.input
+    inputs = iter(["1", "5", "data_prestamos.csv", "0"])  # Simula seleccionar la opción 2 y luego salir
+    builtins.input = lambda prompt=None: next(inputs)
+    try:
+        calculadora.menu_principal()
+    finally:
+        builtins.input = original_input
+    return jsonify({'message': 'El archivo loan_data.csv fue analizado y los resultados se pueden ver en data_prestamos.csv.'})
 
 class CalculadoraPrestamos:
     """
@@ -817,5 +826,3 @@ def main():
 
     if __name__ == "__main__":
         main()
-
-        return jsonify({'message': 'This is function three.'})

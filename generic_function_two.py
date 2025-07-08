@@ -10,7 +10,10 @@ from oauth2client.service_account import ServiceAccountCredentials
 def generic_function_two():
     # Configurar credenciales para Google Sheets
     scope = ["https://spreadsheets.google.com/feeds ", "https://www.googleapis.com/auth/drive "]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+    try:
+        credentials = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+    except Exception as e:
+        return jsonify({'error': f'No se pudo cargar el archivo de credenciales: {e}'}), 400
     gc = gspread.authorize(credentials)
 
     # Abrir el Google Sheet por URL

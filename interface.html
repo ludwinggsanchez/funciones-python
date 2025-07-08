@@ -12,11 +12,18 @@
         input[type="file"] { margin-bottom: 10px; }
         button { padding: 8px 16px; border: none; background: #007bff; color: #fff; border-radius: 4px; cursor: pointer; }
         button:hover { background: #0056b3; }
-        pre { background: #f8f8f8; padding: 10px; border-radius: 4px; }
+        pre {
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap; /* allow line breaks */
+            word-break: break-word; /* break long words */
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div style="display:none;">
         <h2>Upload and Process CSV/XLSX Files</h2>
         <div class="section">
             <form id="uploadCsvForm">
@@ -58,17 +65,18 @@
             </form>
             <pre id="convertResult"></pre>
         </div>
+        </div>
         <div class="section">
             <form id="genericOneForm">
-                <label>Generic Function One</label>
-                <button type="submit">Call Generic One</button>
+                <label>Tasa de mortalidad</label>
+                <button type="submit">Obtener cifras de tasa de mortalidad</button>
             </form>
             <pre id="genericOneResult"></pre>
         </div>
         <div class="section">
             <form id="genericTwoForm">
-                <label>Generic Function Two</label>
-                <button type="submit">Call Generic Two</button>
+                <label>Tasa de hurtos</label>
+                <button type="submit">Obtener cifras de tasas de hurtos</button>
             </form>
             <pre id="genericTwoResult"></pre>
         </div>
@@ -88,15 +96,15 @@
         </div>
         <div class="section">
             <form id="functionThreeForm">
-                <label>Function Three</label>
-                <button type="submit">Call Function Three</button>
+                <label>Tasa de préstamos</label>
+                <button type="submit">Analizar archivo loan_data.csv</button>
             </form>
             <pre id="functionThreeResult"></pre>
         </div>
         <div class="section">
             <form id="functionFourForm">
-                <label>Function Four</label>
-                <button type="submit">Call Function Four</button>
+                <label>Traducciones</label>
+                <button type="submit">Obtener traducción aleatoria</button>
             </form>
             <pre id="functionFourResult"></pre>
         </div>

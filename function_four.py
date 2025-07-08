@@ -1,8 +1,12 @@
+import random
 from flask import jsonify
 
 def function_four():
-    frase = frase.lower().strip()
-    return traducciones.get(frase, "Traducción no encontrada.")
+    # Selecciona una clave aleatoria del diccionario
+    clave = random.choice(list(traducciones.keys()))
+    traduccion = traducciones.get(clave, "Traducción no encontrada.")
+    return jsonify({'message': f'Traducción de "{clave}": {traduccion}'})
+
 traducciones = {
     "hello": "hola",
     "good morning": "buenos días",
