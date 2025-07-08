@@ -1,17 +1,4 @@
 from flask import jsonify
-
-def function_three():
-
-"""
-Calculadora de Interés Compuesto para Análisis de Préstamos
-=========================================================
-
-Este programa analiza datos de préstamos y calcula diferentes escenarios
-de interés compuesto, permitiendo comparaciones y análisis detallados.
-
-Fecha: 2025-07-03
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,6 +6,14 @@ import seaborn as sns
 from typing import Dict, List, Optional, Tuple
 import warnings
 warnings.filterwarnings('ignore')
+
+
+def function_three():
+    """
+    Esta función crea una instancia de la clase CalculadoraPrestamos y ejecuta su menú principal.
+    """
+    calculadora = CalculadoraPrestamos()
+    calculadora.menu_principal()
 
 class CalculadoraPrestamos:
     """
@@ -820,8 +815,7 @@ def main():
     calculadora = CalculadoraPrestamos()
     calculadora.menu_principal()
 
+    if __name__ == "__main__":
+        main()
 
-if __name__ == "__main__":
-    main()
-
-    return jsonify({'message': 'This is function three.'})
+        return jsonify({'message': 'This is function three.'})
