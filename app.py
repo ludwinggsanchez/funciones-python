@@ -1,3 +1,4 @@
+
 from flask import Flask, jsonify, request, send_file, send_from_directory
 import pandas as pd
 import io
@@ -111,3 +112,20 @@ def function_four_endpoint():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
+# Manejador global de errores para devolver JSON en caso de excepción,
+# pero si la excepción ocurre durante el envío de un archivo, deja pasar la excepción para que Flask maneje la respuesta correctamente.
+from werkzeug.exceptions import HTTPException
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Si la excepción es HTTPException y es para enviar un archivo, deja que Flask la maneje
+    if isinstance(e, HTTPException) and getattr(e, 'code', None) in [200, 206]:
+        raise e
+    # Si la ruta es /generic/two y el método es POST, deja pasar la excepción para que send_file funcione
+    if request.path == '/generic/two' and request.method == 'POST':
+        raise e
+    response = {
+        "error": str(e)
+    }
+    return jsonify(response), 500
