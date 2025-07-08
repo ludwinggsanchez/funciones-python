@@ -5,3 +5,7 @@ from xlsx_summary_file import xlsx_summary_file
 from convert_csv_to_xlsx_file import convert_csv_to_xlsx_file
 from generic_function_one import generic_function_one
 from generic_function_two import generic_function_two
+from function_one import function_one
+from function_two import function_two
+from function_three import function_three
+from function_four import function_four
