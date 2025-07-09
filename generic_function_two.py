@@ -51,9 +51,8 @@ def generic_function_two():
 
     # Crear un archivo CSV temporal con los datos procesados
     output_csv = 'Hurtos_en_colombia.csv'
-    columnas_a_mostrar = ['COD_DEPTO','DEPARTAMENTO','MUNICIPIO','FECHA HECHO','AÑO','CANTIDAD']
-    columnas_existentes = [col for col in columnas_a_mostrar if col in df.columns]
-    df[columnas_existentes].to_csv(output_csv, index=False, encoding='utf-8-sig')
+    # Guardar todas las columnas del DataFrame
+    df.to_csv(output_csv, index=False, encoding='utf-8-sig')
 
     print(f"Archivo guardado como {output_csv}")
     # Enviar el archivo como respuesta
