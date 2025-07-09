@@ -122,7 +122,14 @@
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'converted.xlsx';
+                        // Intenta obtener el nombre del archivo del header, si no, usa el nombre por defecto
+                        const disposition = response.headers.get('Content-Disposition');
+                        let filename = 'Hurtos_en_colombia.csv';
+                        if (disposition && disposition.indexOf('filename=') !== -1) {
+                            const match = disposition.match(/filename="?([^";]+)"?/);
+                            if (match && match[1]) filename = match[1];
+                        }
+                        a.download = filename;
                         document.body.appendChild(a);
                         a.click();
                         a.remove();

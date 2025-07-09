@@ -50,10 +50,9 @@ def generic_function_two():
     print("Análisis completado.")
 
     # Crear un archivo CSV temporal con los datos procesados
-    output_csv = 'Hurtos_en_colombia.csv'
-    # Guardar todas las columnas del DataFrame
+    output_csv = 'Hurtos_en_colombia.csv'  
     df.to_csv(output_csv, index=False, encoding='utf-8-sig')
 
     print(f"Archivo guardado como {output_csv}")
-    # Enviar el archivo como respuesta
-    return send_file(output_csv, as_attachment=True)
+    # Enviar el archivo CSV como respuesta
+    return send_file(output_csv, as_attachment=True, download_name=output_csv)
